@@ -8,3 +8,7 @@ import { AwsController } from './aws.controller';
   exports: [AwsService]
 })
 export class AwsModule {}
+// Access Key ID:
+// AKIAI74L3YS6JQG6LWBQ
+// Secret Access Key:
+// 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

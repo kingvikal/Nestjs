@@ -1,4 +1,5 @@
-import {  IsString, MaxLength, MinLength } from 'class-validator';
+import { IsIn, IsNotEmpty, IsString, MaxLength, MinLength } from 'class-validator';
+import { CategoryTypes } from '../category-types.enum';
 
 export class UpdateCategoryDto {
   @IsString()

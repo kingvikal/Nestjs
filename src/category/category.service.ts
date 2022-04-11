@@ -7,7 +7,8 @@ import { Product } from '../product/product.entity';
 import { ProductService } from '../product/product.service';
 import { DeleteResult } from 'typeorm';
 import { UpdateCategoryDto } from './dto/update-category.dto';
-import { AwsService } from '../aws/aws.service';
+import * as fs from 'fs';
+import { AwsService } from '../shared/aws/aws.service';
 @Injectable()
 export class CategoryService {
   constructor(
@@ -51,10 +52,11 @@ export class CategoryService {
     product.description = description;
     product.price = price;
     product.quantity = quantity;
-    // product.category = category;
-    // product.order_items = [];
-    // product.image = await this.awsService.fileupload(image);
-    // console.log(product.image);
+    product.publishedIn = new Date();
+    product.category = category;
+    product.order_items = [];
+    product.image = await this.awsService.fileupload(image);
+    console.log(product.image);
     category.products.push(await product.save());
   }
 

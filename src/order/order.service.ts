@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { OrderRepository } from './order.repository';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository } from 'typeorm';
 import { Order } from './order.entity';
 import { User } from '../auth/user.entity';
 import { CreatePaymentDto } from '../payment/dto/create-payment.dto';
@@ -72,42 +72,42 @@ export class OrderService {
   }
 
   async findOrderItem(id: number): Promise<OrderItem> {
-    const orderItems= this.orderItemRepository.findOne({
+    const order_item = this.orderItemRepository.findOne({
       where: {
         id,
       },
     });
-    if (!orderItems) {
+    if (!order_item) {
       throw new NotFoundException(`Order Item with id ${id} not found`);
     }
-    return orderItems;
+    return order_item;
   }
 
   async deleteOrderItem(id: number): Promise<void> {
-    const orderItems = await this.findOrderItem(id);
-    const result = await this.orderItemRepository.delete(orderItems);
+    const order_item = await this.findOrderItem(id);
+    const result = await this.orderItemRepository.delete(order_item);
     if (result.affected === 0) {
       throw new NotFoundException(`Order Item with id ${id} not found`);
     }
   }
 
   async completeOrder(
-    customer: User,
+    user: User,
     orderId: number,
     createPaymentDto: CreatePaymentDto,
   ): Promise<void> {
-    const order = customer.orders.find(order => order.id === orderId);
+    const order = user.orders.find(order => order.id === orderId);
     const { payment_method } = createPaymentDto;
     const payment = new Payment();
     payment.date = new Date();
-    payment.customer = customer;
+    payment.client = user;
     payment.payment_method = payment_method;
-    const invoice = await this.createInvoice(customer, payment, order);
+    const invoice = await this.createInvoice(user, payment, order);
     order.invoice = invoice;
     payment.invoice = invoice;
     payment.amount = invoice.invoice_total;
     try {
-      customer.payments.push(await payment.save());
+      user.payments.push(await payment.save());
       await order.save();
     } catch (error) {
       console.error(error);
@@ -121,9 +121,11 @@ export class OrderService {
   ): Promise<Invoice> {
     const today = new Date();
     const invoice = new Invoice();
-    invoice.customer = user;
+    invoice.client = user;
     invoice.order = order;
     invoice.invoice_date = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const nextWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 7);
+    invoice.due_date = nextWeek;
     invoice.payment = payment;
     let total_amount = 0;
 

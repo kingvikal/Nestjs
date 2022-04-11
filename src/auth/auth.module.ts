@@ -2,36 +2,25 @@ import { Module, forwardRef } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserRepository } from './user.repository';
-import { JwtModule } from '@nestjs/jwt';
+import { UsersRepository } from './user.repository';
 import { PassportModule } from '@nestjs/passport';
+import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './jwt.strategy';
-import { jwtConstants } from './auth.constants';
-import { OrderModule } from '../order/order.module';
-import { InvoiceModule } from '../invoice/invoice.module';
-import { CartModule } from '../cart/cart.module';
-import { PaymentModule } from '../payment/payment.module';
-import { ProfileModule } from '../profile/profile.module';
+
 @Module({
   imports: [
-    PassportModule.register({
-      defaultStrategy: jwtConstants.strategy    
-    }),
+    PassportModule.register({defaultStrategy: 'jwt'}),
     JwtModule.register({
-      secret: jwtConstants.secret,
-      signOptions: {
-        expiresIn: jwtConstants.expiresIn,
-      },
+      secret: 'topSecret51',
+      signOptions:{
+        expiresIn: 3600,
+      }
     }),
-    TypeOrmModule.forFeature([UserRepository]),
-    forwardRef(() =>  OrderModule),
-    forwardRef(() =>  CartModule),
-    PaymentModule,
-    ProfileModule,
-    InvoiceModule,
+    TypeOrmModule.forFeature([UsersRepository]),
+    
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy],
-  exports: [JwtStrategy, PassportModule],
+  providers: [AuthService, JwtStrategy ],
+  exports: [JwtStrategy, PassportModule]
 })
 export class AuthModule {}

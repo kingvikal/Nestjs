@@ -3,9 +3,11 @@ import { IsIn } from 'class-validator';
 
 export class CreatePaymentDto {
   @IsIn([
-    PaymentMethod.Esewa,
-    PaymentMethod.Khalti,
-    PaymentMethod.Cash,
+    PaymentMethod.VISA,
+    PaymentMethod.PAYPAL,
+    PaymentMethod.CASH_ON_DELIVERY,
+    PaymentMethod.MASTERCARD,
+    PaymentMethod.PURCHASE_ORDER
   ])
   payment_method: PaymentMethod;
 }

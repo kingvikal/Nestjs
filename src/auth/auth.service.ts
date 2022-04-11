@@ -1,72 +1,35 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './user.entity';
-import { UserRepository } from './user.repository';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
+import { UsersRepository } from './user.repository';
+import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './jwt-payload.interface';
-import { CreateProfileDto } from '../profile/dto/create-profile.dto';
-import { ProfileService } from '../profile/profile.service';
-import { PaymentService } from '../payment/payment.service';
-import { InvoiceService } from '../invoice/invoice.service';
-import { CartService } from '../cart/cart.service';
-import { OrderService } from '../order/order.service';
 
 @Injectable()
-export class AuthService {
-  constructor(
+export class AuthService{
+  constructor (
+    @InjectRepository(UsersRepository)
+    private usersRepository: UsersRepository,
     private jwtService: JwtService,
-    @InjectRepository(User) private readonly userRepository: UserRepository,
-    private profileService: ProfileService,
-    private paymentService: PaymentService,
-    private invoiceService: InvoiceService,
-    private cartService: CartService,
-    private orderService: OrderService,
-  ) {
+  ){}
+
+  async signUp(authCredentialsDto: AuthCredentialsDto): Promise<void>{
+    return this.usersRepository.createUser(authCredentialsDto);
   }
 
-  async signUp(
-    authCredentialsDto: AuthCredentialsDto,
-    createProfileDto: CreateProfileDto,
-  ): Promise<void> {
-    return this.userRepository.signUp(authCredentialsDto, createProfileDto);
-  }
+  async signIn(authCredentialsDto: AuthCredentialsDto): Promise<{accessToken: string}>{
+    const {username, password} = authCredentialsDto;
 
-  async signIn(
-    authCredentialsDto: AuthCredentialsDto,
-  ): Promise<{ accessToken: string }> {
-    const username = await this.userRepository.validateUserPassword(
-      authCredentialsDto,
-    );
-    if (!username) {
-      throw new UnauthorizedException('Invalid Credentials');
+    const user = await this.usersRepository.findOne({where:{username}});
+
+    if(user && (await bcrypt.compare(password, user.password))){
+      const payload : JwtPayload = {username};
+      const accessToken: string = await this.jwtService.sign(payload);
+      return {accessToken};
+    }else{
+      throw new UnauthorizedException('Please check your login credentials');
     }
-    const payload: JwtPayload = { username };
-    const accessToken = this.jwtService.sign(payload);
-    return { accessToken };
-  }
-
-  async getAuthenticatedUser(id: number): Promise<User> {
-    const currentUser = await this.userRepository.findOne({
-      where: {
-        id,
-      },
-    });
-    if (!currentUser) {
-      throw new UnauthorizedException();
-    }
-    return currentUser;
-  }
-
-  async getUserData(id: number): Promise<any>{
-    const user = await this.getAuthenticatedUser(id);
-    const profile = await this.profileService.getProfileData(user);
-    const cart = await this.cartService.getCart(profile.cartId);
-    const cartItem = await this.cartService.getCartItem(cart.cartItemId);
-    return {
-      profile,
-      cart,
-      cartItem
     }
   }
-}
+

@@ -15,7 +15,7 @@ export class InvoiceService {
   async findInvoice(user: User, id: number): Promise<Invoice> {
     const invoice = await this.invoiceRepository.findOne({
       where: {
-        customer: user,
+        client: user,
         id,
 
       },
@@ -25,8 +25,8 @@ export class InvoiceService {
     }
     return invoice;
   }
-  async deleteInvoice(customer: User, invoiceId: number): Promise<void> {
-    const invoice = await this.findInvoice(customer, invoiceId);
+  async deleteInvoice(client: User, invoiceId: number): Promise<void> {
+    const invoice = await this.findInvoice(client, invoiceId);
     const result = await this.invoiceRepository.delete(invoice);
     if (result.affected === 0) {
       InvoiceService.throwError(invoiceId);

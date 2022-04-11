@@ -1,5 +1,7 @@
 export enum PaymentMethod {
-  Esewa = 'Esewa',
-  Khalti = 'Khalti',
-  Cash = 'cash',
+  VISA = 'VISA',
+  PAYPAL = 'PAYPAL',
+  CASH_ON_DELIVERY = 'CASH_ON_DELIVERY',
+  MASTERCARD = "MASTERCARD",
+  PURCHASE_ORDER = "PURCHASE_ORDER"
 }

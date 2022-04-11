@@ -8,18 +8,18 @@ export class PaymentService {
   constructor(private paymentRepository: PaymentRepository) {}
 
 
-  async findPayments(customer: User): Promise<Payment[]> {
+  async findPayments(client: User): Promise<Payment[]> {
       const payments = await this.paymentRepository.find({
       where: {
-        customer
+        client
       }
     });
     return payments;
   }
-  async findPayment(customer: User, id: number): Promise<Payment> {
+  async findPayment(client: User, id: number): Promise<Payment> {
     const payment = await this.paymentRepository.findOne({
       where: {
-      customer,
+      client,
         id
       },
     });
@@ -28,8 +28,8 @@ export class PaymentService {
     }
     return payment;
   }
-  async deletePayment(customer: User, paymentId: number): Promise<void> {
-    const payment = await this.findPayment(customer, paymentId);
+  async deletePayment(client: User, paymentId: number): Promise<void> {
+    const payment = await this.findPayment(client, paymentId);
     const result = await this.paymentRepository.delete(payment);
     if (result.affected === 0) {
       throw new NotFoundException(`Payment with id ${paymentId} not found!!`);

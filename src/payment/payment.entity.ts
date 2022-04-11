@@ -21,7 +21,7 @@ export class Payment extends BaseEntity {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE'
   })
-  customer: User;
+  client: User;
 
   @Column()
   date: Date;
@@ -38,6 +38,5 @@ export class Payment extends BaseEntity {
   })
   @JoinColumn()
   invoice: Invoice;
-    seller: any;
 
 }

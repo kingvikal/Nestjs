@@ -5,7 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CategoryRepository } from './category.repository';
 import { AuthModule } from '../auth/auth.module';
 import { ProductModule } from '../product/product.module';
-import { AwsModule } from '../aws/aws.module';
+import { AwsModule } from '../shared/aws/aws.module';
 
 @Module({
   imports: [

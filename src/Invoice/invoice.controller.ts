@@ -12,7 +12,7 @@ export class InvoiceController {
   @UseGuards(AuthGuard())
   @Get(':id')
   getUserInvoice(@GetAuthenticatedUser() user: User,
-  @Param('id', ParseIntPipe) invoiceId: number) {
+                 @Param('id', ParseIntPipe) invoiceId: number) {
     return this.invoiceService.findInvoice(user, invoiceId);
   }
 }

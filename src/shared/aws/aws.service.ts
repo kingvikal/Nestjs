@@ -1,6 +1,6 @@
 import { Injectable, Req, Res } from '@nestjs/common';
 import * as AWS from 'aws-sdk';
-import * as config from '../config';
+import * as config from '../../config';
 import { extname } from 'path';
 const s3 = new AWS.S3();
 AWS.config.update({

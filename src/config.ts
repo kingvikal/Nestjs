@@ -4,6 +4,15 @@ export default{
     Access_Key_ID: 'Access_Key_ID',
     Secret_Access_Key:'topSecret51',
     cdnUrl: 'cdnUrl',
-    AWS_SDK_LOAD_CONFIG :'1'
-  }
+  },
+  dbConfig: {
+    type: 'postgres',
+    host: 'localhost',
+    port: 5432,
+    username: 'postgres',
+    password: 'postgres',
+    database: 'agro_nepal_app',
+    entities: [__dirname + '/**/*.entity{.ts,.js}'],
+    synchronize: true,
+  },
 }

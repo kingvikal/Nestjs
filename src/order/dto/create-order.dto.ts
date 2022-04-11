@@ -9,6 +9,4 @@ export class CreateOrderDto {
   @IsNotEmpty()
   @IsString()
   comments: string;
-
-  
 }
