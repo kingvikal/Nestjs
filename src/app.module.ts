@@ -6,43 +6,44 @@ import { CartModule } from './cart/cart.module';
 import { CategoryModule } from './category/category.module';
 import { OrderModule } from './order/order.module';
 import { PaymentModule } from './payment/payment.module';
-import { ProfileModule } from './profile/profile.module';
-import { InvoiceModule } from './invoice/invoice.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MulterModule } from '@nestjs/platform-express';
-
+import { InvoiceModule } from './Invoice/invoice.module';
+import { ProfileModule } from './profile/profile.module';
+import { AwsModule } from './shared/aws/aws.module';
+import { join } from 'path';
 
 @Module({
 	imports: [
 		TypeOrmModule.forRoot({
 			type: 'postgres',
-			host: process.env.POSTGRES_HOST,
-			port: parseInt(<string>process.env.POSTGRES_PORT),
-			username: process.env.POSTGRES_USER,
-			password: process.env.POSTGRES_PASSWORD,
-			database: process.env.POSTGRES_DATABASE,
+			host: 'localhost',
+			port: 5432,
+			username: 'postgres',
+			password: 'postgres',
+			database: 'agro_nepal_app',
 			
 			synchronize: true,
-			entities: [__dirname + '/**/*.entity{.ts,.js}'],
+			entities: [join(__dirname, '**', '*.entity.{ts,js}')],
 		}),
+		MulterModule.register({
+			dest: './files',
+		  }),
+		AuthModule,
+		AwsModule,
 		ProductModule,
 		CartModule,
 		CategoryModule,
 		OrderModule,
 		PaymentModule,
-		ProfileModule,
 		InvoiceModule,
+		ProfileModule,
 		
-		MulterModule.register({
-			dest: './files',
-		  }),
 		
-    AuthModule,
-    
 		
 	],
 	controllers: [AppController],
-	providers: [AppService,  ]
+	providers: [AppService]
 })
 export class AppModule {}

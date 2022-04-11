@@ -6,6 +6,11 @@ import { UsersRepository } from './user.repository';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './jwt.strategy';
+import { OrderModule } from 'src/order/order.module';
+import { CartModule } from 'src/cart/cart.module';
+import { PaymentModule } from 'src/payment/payment.module';
+import { ProfileModule } from 'src/profile/profile.module';
+import { InvoiceModule } from 'src/Invoice/invoice.module';
 
 @Module({
   imports: [
@@ -17,6 +22,11 @@ import { JwtStrategy } from './jwt.strategy';
       }
     }),
     TypeOrmModule.forFeature([UsersRepository]),
+    forwardRef(() =>  OrderModule),
+    forwardRef(() =>  CartModule),
+    PaymentModule,
+    ProfileModule,
+    InvoiceModule,
     
   ],
   controllers: [AuthController],

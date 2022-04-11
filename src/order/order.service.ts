@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { OrderRepository } from './order.repository';
-import { DeleteResult, Repository } from 'typeorm';
+import {  Repository } from 'typeorm';
 import { Order } from './order.entity';
 import { User } from '../auth/user.entity';
 import { CreatePaymentDto } from '../payment/dto/create-payment.dto';
@@ -9,6 +9,7 @@ import { Invoice } from '../invoice/invoice.entity';
 import { OrderItem } from './order_item.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import {OrderStatus} from  './order-status.enum'
+import { InvoiceService } from 'src/Invoice/invoice.service';
 @Injectable()
 export class OrderService {
   constructor(

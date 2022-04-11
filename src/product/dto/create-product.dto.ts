@@ -7,9 +7,8 @@ import {
   IsPositive,
   Min,
   Max,
-  IsDate,
-  IsDateString,
-  MinDate,
+  
+  
 } from 'class-validator';
 
 export class CreateProductDto {

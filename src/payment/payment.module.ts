@@ -3,11 +3,18 @@ import { PaymentService } from './payment.service';
 import { PaymentController } from './payment.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PaymentRepository } from './payment.repository';
-import { AuthModule } from 'src/auth/auth.module';
+import { PassportModule } from '@nestjs/passport';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
-  imports: [AuthModule,
-    TypeOrmModule.forFeature([PaymentRepository])],
+  imports: [TypeOrmModule.forFeature([PaymentRepository]),
+  PassportModule.register({defaultStrategy: 'jwt'}),
+    JwtModule.register({
+      secret: 'topSecret51',
+      signOptions:{
+        expiresIn: 3600,
+      }
+    }),],
   controllers: [PaymentController],
   providers: [PaymentService],
   exports: [

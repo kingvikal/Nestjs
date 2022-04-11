@@ -4,8 +4,6 @@ import {
   PrimaryGeneratedColumn,
   Column,
   ManyToOne,
-  ManyToMany,
-  JoinTable,
   OneToMany, OneToOne, JoinColumn,
 } from 'typeorm';
 import { OrderStatus } from './order-status.enum';

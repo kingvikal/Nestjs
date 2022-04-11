@@ -7,7 +7,6 @@ import { Product } from '../product/product.entity';
 import { ProductService } from '../product/product.service';
 import { DeleteResult } from 'typeorm';
 import { UpdateCategoryDto } from './dto/update-category.dto';
-import * as fs from 'fs';
 import { AwsService } from '../shared/aws/aws.service';
 @Injectable()
 export class CategoryService {

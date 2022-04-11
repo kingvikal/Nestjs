@@ -6,13 +6,22 @@ import { CategoryRepository } from './category.repository';
 import { AuthModule } from '../auth/auth.module';
 import { ProductModule } from '../product/product.module';
 import { AwsModule } from '../shared/aws/aws.module';
+import { PassportModule } from '@nestjs/passport';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([CategoryRepository]),
     AuthModule,
     ProductModule,
-    AwsModule
+    AwsModule,
+    PassportModule.register({defaultStrategy: 'jwt'}),
+    JwtModule.register({
+      secret: 'topSecret51',
+      signOptions:{
+        expiresIn: 3600,
+      }
+    }),
   ],
   providers: [CategoryService],
   controllers: [CategoryController],
